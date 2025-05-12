@@ -2,6 +2,7 @@ import re
 from itertools import groupby
 from operator import itemgetter
 
+
 class Block:
     """
     A continuous range of molecular positions, with a single start and end point.
@@ -234,6 +235,35 @@ class Residue3D:
 
     def add_atom(self, atom_name, coords):
         self.atoms.append(Atom(atom_name, coords[0], coords[1], coords[2]))
+
+
+x = None
+y = None
+z = None
+
+class Guanine(Residue3D):
+    def __init__(self, atom_coords=None):
+        super().__init__("Guanine")
+        self.name = "Guanine"
+        
+        self.atom = [
+            Atom("N1", x, y, z),
+            Atom("C2", x, y, z),
+            Atom("N2", x, y, z),
+            Atom("N3", x, y, z),
+            Atom("C4", x, y, z),
+            Atom("C5", x, y, z),
+            Atom("C6", x, y, z),
+            Atom("O6", x, y, z),
+            Atom("N7", x, y, z),
+            Atom("C8", x, y, z),
+            Atom("N9", x, y, z),
+        ]
+
+        coords = atom_coords if atom_coords is not None else {}
+        for atom_name, (xx, yy, zz) in coords.items():
+            self.add_atom(atom_name, (xx, yy, zz))
+
 
 class TertiaryStructure:
 
