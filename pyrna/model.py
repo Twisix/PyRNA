@@ -228,41 +228,74 @@ class Atom:
         self.y = y
         self.z = z
 
+    def __str__(self):
+        return self.name
+
+class EndocyclicA(Atom):
+    def __init__(self, atom_name, atom_type):
+        Atom.__init__(self, atom_name, atom_type)
+    
+    def __str__(self):
+        return self.name
+
+class DonorEndoA(EndocyclicA):
+    def __init__(self, atom_name, atom_type):
+        EndocyclicA.__init__(self, atom_name, atom_type)
+    
+    def __str__(self):
+        return self.name
+
+class AcceptorEndoA(EndocyclicA):
+    def __init__(self, atom_name, atom_type):
+        EndocyclicA.__init__(self, atom_name, atom_type)
+    
+    def __str__(self):
+        return self.name
+
+class ExocyclicA(Atom):
+    def __init__(self, atom_name, atom_type):
+        Atom.__init__(self, atom_name, atom_type)
+
+    def __str__(self):
+        return self.name
+
+class DonorExoA(ExocyclicA):
+    def __init__(self, atom_name, atom_type):
+        ExocyclicA.__init__(self, atom_name, atom_type)
+
+    def __str__(self):
+        return self.name
+
+class AcceptorExoA(ExocyclicA):
+    def __init__(self, atom_name, atom_type):
+        ExocyclicA.__init__(self, atom_name, atom_type)
+
+    def __str__(self):
+        return self.name
+    
 class Residue3D:
-    def __init__(self, residue_name):
-        self.residue_name = residue_name
+    def __init__(self):
         self.atoms = [] #a list of Atom objects
 
     def add_atom(self, atom_name, coords):
         self.atoms.append(Atom(atom_name, coords[0], coords[1], coords[2]))
 
 
-x = None
-y = None
-z = None
-
-class Guanine(Residue3D):
-    def __init__(self, atom_coords=None):
-        super().__init__("Guanine")
-        self.name = "Guanine"
+class Guanine3D(Residue3D):
+    def __init__(self):
+        Residue3D.__init__(self)
         
-        self.atom = [
-            Atom("N1", x, y, z),
-            Atom("C2", x, y, z),
-            Atom("N2", x, y, z),
-            Atom("N3", x, y, z),
-            Atom("C4", x, y, z),
-            Atom("C5", x, y, z),
-            Atom("C6", x, y, z),
-            Atom("O6", x, y, z),
-            Atom("N7", x, y, z),
-            Atom("C8", x, y, z),
-            Atom("N9", x, y, z),
-        ]
-
-        coords = atom_coords if atom_coords is not None else {}
-        for atom_name, (xx, yy, zz) in coords.items():
-            self.add_atom(atom_name, (xx, yy, zz))
+    def add_atom(self, atom_name, coords):
+        match atom_name:
+            case "N1": self.atoms.append(DonorEndoA(atom_name, coords[0], coords[1], coords[2]))
+            case "N2": self.atoms.append(DonorExoA(atom_name, coords[0], coords[1], coords[2]))
+            case "N3": self.atoms.append(AcceptorEndoA(atom_name, coords[0], coords[1], coords[2]))
+            case "O6": self.atoms.append(AcceptorExoA(atom_name, coords[0], coords[1], coords[2]))
+            case "N7": self.atoms.append(AcceptorEndoA(atom_name, coords[0], coords[1], coords[2]))
+            case _: self.atoms.append(Atom(atom_name, coords[0], coords[1], coords[2]))
+    
+    def __str__(self):
+        return "G"
 
 
 class TertiaryStructure:
